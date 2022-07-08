@@ -14,16 +14,44 @@ const Form = (props) => {
         }
     }
 
+    const showErrorMessage = (message) => {
+        let form = document.getElementById("contact-form");
+        let error_div = document.createElement("div");
+        error_div.id = "error-message";
+        error_div.classList.add("alert", "alert-danger");
+        error_div.innerHTML = message;
+        form.prepend(error_div);
+    };
+
     const validateForm = (user) => {
+        let error = document.getElementById("error-message");
+        if (error) {
+            error.remove();
+        }
+
+        let error_message = ""
+
         let isNameValid = validateName(user.userName);
         let isEmailValid = validateEmail(user.email);
         let isPhoneValid = validatePhone(user.phone);
 
-        if (!isNameValid) alert("incorrect NAME");
-        if (!isPhoneValid) alert("incorrect Phone");
-        if (!isEmailValid) alert("incorrect Email");
+        if (!isEmailValid) {
+            error_message = "Email address invalid!";
+        }
+        if (!isPhoneValid) {
+            error_message = "Phone number invalid!";
+        }
+        if (!isNameValid) {
+            error_message = "Input filed is require!";
+        }
 
-        return isNameValid && isEmailValid && isPhoneValid;
+        if (!isPhoneValid || !isNameValid || !isEmailValid) {
+            showErrorMessage(error_message);
+
+            return false;
+        }
+
+        return true
     }
 
     const validateName = (name) => {
